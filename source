@@ -1,0 +1,22 @@
+hint = Instance.new("Hint", workspace)
+hint.Text = "Loaded Knife's chat logger"
+task.wait(1.5)
+hint:Destroy()
+
+if game:GetService("ReplicatedStorage"):FindFirstChild("DefaultChatSystemChatEvents") then
+game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.OnMessageDoneFiltering.OnClientEvent:Connect(function(messageData)
+Message = messageData.Message
+User = messageData.FromSpeaker
+local hr = "["..os.date("*t")["hour"]..":"..os.date("*t")["min"].."]"
+writefile("chatlogs.txt", readfile("chatlogs.txt").."(Place ID: "..game.PlaceId..") "..hr.." ["..User.."]: "..Message.."\n")
+end)
+else
+game:GetService("TextChatService").OnIncomingMessage = function(message) 
+Message = message.Text
+User = game:GetService("Players"):GetNameFromUserIdAsync(message.TextSource.UserId)
+if message.Status == Enum.TextChatMessageStatus.Success then
+local hr = "["..os.date("*t")["hour"]..":"..os.date("*t")["min"].."]"
+writefile("chatlogs.txt", readfile("chatlogs.txt").."(Place ID: "..game.PlaceId..") "..hr.." ["..User.."]: "..Message.."\n")
+end
+end
+end
